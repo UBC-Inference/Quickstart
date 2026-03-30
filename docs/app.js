@@ -70,8 +70,14 @@
       const li = document.createElement("li");
       li.className = h.tagName === "H3" ? "toc-h3" : "toc-h2";
       const a = document.createElement("a");
-      a.href = "#" + id;
       a.textContent = h.textContent;
+      a.addEventListener("click", (event) => {
+        event.preventDefault();
+        const target = document.getElementById(id);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      });
       li.appendChild(a);
       tocList.appendChild(li);
     });
