@@ -7,7 +7,7 @@ title: Reading List
 - [ ] alammar.github.io/illustrated-transformer
 - [ ] How Transformer LLMs Work
 - [ ] Efficient Memory Management for Large Language Model Serving with PagedAttention
-- [ ] baseten book (chud)
+- [ ] baseten book
 
 ## Linux
 

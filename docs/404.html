@@ -3,10 +3,24 @@
 <head>
   <meta charset="utf-8">
   <script>
-    // Redirect to index.html with the URL path as a hash fragment
+    // Redirect to index.html with the route path as a hash fragment
     // This enables direct navigation to docs pages on GitHub Pages
-    var path = location.pathname + location.search + location.hash;
-    location.replace('index.html#' + path);
+    (function() {
+      var routePath = location.pathname;
+      // Extract the route after /docs/ prefix if present
+      var docsIdx = routePath.indexOf('/docs/');
+      if (docsIdx !== -1) {
+        routePath = routePath.substring(docsIdx + 5); // Keep the leading /
+      }
+      if (!routePath || routePath === '/') {
+        routePath = '/';
+      } else if (routePath.charAt(0) !== '/') {
+        routePath = '/' + routePath;
+      }
+      // Remove trailing .html or index.html
+      routePath = routePath.replace(/\/?index\.html$/, '').replace(/\.html$/, '');
+      location.replace('index.html#' + routePath + location.search + location.hash);
+    })();
   </script>
 </head>
 <body>

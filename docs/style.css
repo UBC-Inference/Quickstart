@@ -47,6 +47,12 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   font-family: var(--font-sans);
   background: var(--bg);
@@ -113,6 +119,13 @@ body {
 #theme-toggle:hover {
   color: var(--text);
   border-color: var(--text-muted);
+}
+
+#sidebar-toggle:focus-visible,
+#theme-toggle:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 #theme-toggle .icon-moon {

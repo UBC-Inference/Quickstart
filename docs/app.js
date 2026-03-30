@@ -159,8 +159,18 @@
 
   // --- Router ---
   function getHashPath() {
-    const hash = location.hash.slice(1) || "/";
-    return hash;
+    let hash = location.hash.slice(1) || "/";
+    // Strip leading BASE_PATH prefix (e.g. "/repo/docs/inference" -> "/inference")
+    if (BASE_PATH && hash.startsWith(BASE_PATH + "/")) {
+      hash = hash.slice(BASE_PATH.length);
+    }
+    // Ensure the route starts with a single leading slash
+    if (!hash.startsWith("/")) {
+      hash = "/" + hash.replace(/^\/+/, "");
+    }
+    // Drop any in-page anchor segment (e.g. "/route#section" -> "/route")
+    const route = hash.split("#", 1)[0];
+    return route || "/";
   }
 
   function onRouteChange() {

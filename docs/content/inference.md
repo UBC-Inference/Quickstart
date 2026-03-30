@@ -2,13 +2,17 @@
 title: Inference Overview
 ---
 
+This is heavily inspired by Baseten's inference book (which is frankly is also a brief introduction to inference). If you need more detail go read that or 
 ## Models
 
-<!-- TODO: Add model notes -->
 
 ## Hardware
 
 <!-- TODO: Add hardware notes -->
+
+## Software
+
+<!-- TODO: Add software notes -->
 
 ## KV Cache
 
