@@ -63,7 +63,41 @@ There are also three fundamental layers!
 
 each layer produces an output for the next to read, and these outputs are hidden states
 
+![](../assets/neural-net.png)
 
+These are for creating internal representations, and there are also neural nets for using them:
+- encoders take inputs like text to create these internal representations (and additional semantic meanings)
+- decoders use the internal representation to generate our useful output
+
+They are composable! Modern LLMs are decoder only, and encoder models are somewhat rare
+
+every matmul is sorta just y = mx + b (not really) - but this is a linear layer which is its simplest form.
+
+**Activation functions** are used because matmul is composable, and so mul tiplying vectors by two matrices is the equivalent to the product of those matrices. In multi-layer networks, each would collapse, so deep layer networks are more useful for having more parameters and encoding more meaning in hidden states. Neural nets break linearity by having activation functions that are non-linear to prevent composability (and are differentiable to support back propagation usually... - IDK backprop or the math involved but sure)
+
+
+![](../assets/ReLU.png)
+
+### LLM Inference
+- LLms are autorgressive which means each token is based on the previous one. Texts and tokens are just a mapping, and dont require nets. Language model vocab is the complete mapping of tokens and strings
+- most have over 100k tokens in vocabulary, and as such our sequences are as follows
+
+- input sequence: prompt, chat, context, functions and inputs passed into the llm
+- reasoning sequence: optional, to have an intermediate output
+- output sequence: response generated
+
+the mechanics here have sort of been hinted at, but are essentially prefill and decode.
+
+**Prefill** - processing the input sequence to calculate attention, i.e. a weight/score, for each input token (storing each value in the KV)
+**Decode** - perform forward passes through the model to generate tokens autoregressively. 
+
+Decoding takes a few extra steps since outputs are not tokens, and so the layer will generate a vector of logics, and the length is the same as our original vocabulary. With normalization, these logics represent probability of each potential token, and with a weighted random number generator they are selected. We see some familiar terms appear here again
+
+Temperature: randomness (adjust before normalization)
+Top-k: select top-k most likely after normalization (then re-normalize among them, i.e. reducing output probabilities)
+Top-p: greedily choose the smallest set of tokens after normalization that have probabilities that add up to p (lower is more deterministic)
+
+### Nomenclature
 
 ## Hardware
 
