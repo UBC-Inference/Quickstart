@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script>
+    // Redirect to index.html with the URL path as a hash fragment
+    // This enables direct navigation to docs pages on GitHub Pages
+    var path = location.pathname + location.search + location.hash;
+    location.replace('index.html#' + path);
+  </script>
+</head>
+<body>
+  <p>Redirecting... <a href="index.html">Click here if not redirected.</a></p>
+</body>
+</html>
