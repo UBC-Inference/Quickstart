@@ -14,8 +14,9 @@ This organization intends to begin mainly building around infrastructure and too
 TTFT is time to first token, and it means that with a streaming output, how long does it take for a user to see the first output. Its bounded by compute-bounded prefill (kv cache). The metric means better latency
 Tok/s is the tokens per second, and it refers to the throughput, which is bounded by bandwidth bound decode.
 
-Prefill is computation heavy because it takes the input in parallel and must generate the key/value pair for each token at each layer, requiring massive parallelization (due to the matmul that is involved on the GPU). 
-Decode is bandwidth heavy as it is autoregressive, which means referring back to every single decoded token as a dependency for the next token. Each requires all model weights from HBM (high bandwidth memory) to go to the processing cores. Small batch sizes also means that the GPU cannot amortize the cost of moving weights across multiple tokens. There's some additional terms here like perceived TPS (which discounts the TTFT) and total TPS which is the total number of tokens generated. ITL is also the inverse measuring frequency instead of rate.
+Prefill is computation heavy because it takes the input in parallel and must generate the key/value pair for each token at each layer, requiring massive parallelization (due to the matmul that is involved on the GPU). The model's weights are only loaded a single time, and then a large matmul between inputs and attention occurs, which only needs one read from memory
+
+Decode is bandwidth heavy as it is autoregressive, which means referring back to every single decoded token as a dependency for the next token. Each requires all model weights from HBM (high bandwidth memory) to go to the processing cores. Small batch sizes also means that the GPU cannot amortize the cost of moving weights across multiple tokens. There's some additional terms here like perceived TPS (which discounts the TTFT) and total TPS which is the total number of tokens generated. ITL is also the inverse measuring frequency instead of rate. Model weights need to be loaded for every token to do so.
 
 **Benchmarking** is also important, and similarly to other parts of engineering, values lke median and mean are typically used. Right-skewed distribution is common for inference because of outliers.
 
@@ -99,13 +100,46 @@ Top-p: greedily choose the smallest set of tokens after normalization that have 
 
 ### Nomenclature
 
+Very quickly model nomenclature typically consists of
+
+Family-Version-\[MoE\]-\[Other specifics\]-(parameter size)b-a(active parameters)b.
+
+### Transformers
+Transformers are the main blocks that compose LLMs, but this section will be completed at a later date after some additional reading.
+
+### Inference Bottlenecks
+
+As mentioned previously, we are typically either memory or bandwidth bound, but ideally we are balancing our work s.t. both are fully utilized at all times.
+
+We can model this with our Ops:Byte ratio and arithmetic intensity. Each GPU has a specific compute speed (measured in operations per second) and memory bandwidth (measured as GiB or TiB per seconds). We can compare these to determine an ops:byte ratio of a given gpu.
+
+Because the ratio is measured on a per-second scale, this can be measured against the bandwidth ceiling.
+
+
+![](../assets/roofline-chart.png)
+
+If under the ceiling of bandwidth, we are memory bound, and if above we are compute bound.
+
 ## Hardware
 
-<!-- TODO: Add hardware notes -->
+There are three types of GPUs on the market. 
+- Datacenter GPUs, which are racked
+- workstation GPUs, which are for professional workflows (RTX Pro 6000)
+- personal computing gpus, which are used for everyday use
+
+for most intents and purposes, if you need inference to scale, you have to have access to datacenter gpus. This means doing one of three things
+- Cloud: renting someone elses datacenter
+- On-prem: having your GPUs installed in a datacenter that you control
+- Air-gapped: having your own on-prem gpus that must be physically accessed 
+
+What metrics do we care about?
+- CUDA Cores - which operates on individual numbres (or scalars)
+- tensor cores - which operate on vectors and matrices
+
 
 ## Software
 
-<!-- TODO: Add software notes -->
+[TODO] Some things to write about SGLang, TensorRT and vLLM... will be filled out upon more research.
 
 ## KV Cache
 
