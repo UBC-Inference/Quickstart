@@ -2,7 +2,7 @@
 title: Introduction
 ---
 
-This is a repository with some quick notes about inference and domains related to this organization's work. This repo is currently maintained by Kevin Xiao (kevinxiao27) on github.
+This is a repository with some quick notes about inference and domains related to this organization's work. UBC Inference currently consists of [Kevin Xiao](https://kxiao.dev), [Brian Adhitya](https://briannval.com), and [Kezia Rijadi](https://keziarijadi.vercel.app/)
 
 Reading these documents is not intended to give a comprehensive understanding, but should give enough context to quickly start — to branch off and build your own projects!
 

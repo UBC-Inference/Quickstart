@@ -48,7 +48,20 @@ DeepSeek R1 is a reasoning model with 671 B parameters, but the distilled models
 This section heavily cuts on details on transformer architecture and different models, so if you care, please go through the reading list. We'll focus on autoregressive token generation (because this is usually more useful for codegen because we're focusing on LLMs!)
 
 ### Neural Networks
-- 
+
+Neural networks are our foundation for models, so this section goes over them at a very high level. Checkout the reading list - which also doubles as my reading list.
+
+The fundamental unit of a neural network is a node. Where it is a hsort program taking an input, multiplying it by weights, adding some bias, and returning the results
+- groups of nodes form layers
+- nodes within layers are independent
+- connections are the network - where nodes receive the output of the previous layer
+
+There are also three fundamental layers!
+- input layer: where we accept and process the input
+- hidden layers: every layer that is within the first and the last, which iteratively transforms input to arrive at an output (aka the blackbox)
+- output layer: the final layer, which returns the prediction from the network
+
+each layer produces an output for the next to read, and these outputs are hidden states
 
 
 
