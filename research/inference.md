@@ -1,4 +1,4 @@
-# Overview
+# Inference Overview
 ## Models
 
 ## Hardware
@@ -9,6 +9,6 @@
 
 ## Memory Mechanics
 
-# Serverless
+# Serverless Mechanics
 
 # List of guiding questions
