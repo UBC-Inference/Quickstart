@@ -13,9 +13,10 @@ const NAV = [
     ],
   },
   {
-    title: "Projects",
+    title: "[Project] Serverless Platform",
     links: [
       { title: "Serverless Platform", href: "/serverless-platform" },
+      { title: "Reading List", href: "/serverless-platform/serverless-reading-list" },
     ],
   },
 ];
@@ -25,4 +26,5 @@ const PAGES = {
   "/inference": { file: "content/inference.md", title: "Inference Overview" },
   "/inference-reading-list": { file: "content/inference-reading-list.md", title: "Reading List" },
   "/serverless-platform": { file: "content/serverless-platform/index.md", title: "Serverless Platform" },
+  "/serverless-platform/serverless-reading-list": { file: "content/serverless-platform/serverless-reading-list.md", title: "Reading List" },
 };

@@ -140,6 +140,42 @@
         return `<h${level} id="${slug}">${t}</h${level}>`;
       };
 
+      // Custom image renderer with lazy loading, captions, and error handling
+      renderer.image = function (href, title, text) {
+        // Handle both old and new marked.js API
+        const src = typeof href === "object" ? href.href : href;
+        const altText = typeof href === "object" ? href.text : text;
+        const titleAttr = typeof href === "object" ? href.title : title;
+
+        // Resolve image path relative to markdown file
+        let resolvedSrc = src;
+        if (src && !src.startsWith("http://") && !src.startsWith("https://") && !src.startsWith("/")) {
+          const currentPage = PAGES[path];
+          if (currentPage && currentPage.file) {
+            const pageDir = currentPage.file.substring(0, currentPage.file.lastIndexOf("/") + 1);
+            resolvedSrc = BASE_PATH + "/" + pageDir + src;
+          }
+        }
+
+        // Build image HTML with enhanced attributes
+        const imgHtml = `<img 
+          src="${resolvedSrc}" 
+          alt="${altText || ""}"
+          title="${titleAttr || ""}"
+          loading="lazy"
+          decoding="async"
+          class="prose-image zoomable"
+          data-original="${resolvedSrc}"
+          onerror="this.onerror=null; this.classList.add('error');"
+        />`;
+
+        // Wrap in figure with caption if alt text exists
+        if (altText) {
+          return `<figure class="image-figure">${imgHtml}<figcaption class="image-caption">${altText}</figcaption></figure>`;
+        }
+        return imgHtml;
+      };
+
       marked.setOptions({
         renderer,
         highlight: function (code, lang) {
@@ -161,6 +197,81 @@
     } catch (err) {
       document.getElementById("article").innerHTML = `<h1>Error</h1><p>${err.message}</p>`;
     }
+  }
+
+  // --- Image Modal ---
+  function initImageModal() {
+    // Add modal HTML to document body
+    const modalHtml = `
+      <div id="image-modal" class="image-modal" role="dialog" aria-modal="true" aria-label="Image viewer" tabindex="-1">
+        <div class="modal-overlay" aria-hidden="true"></div>
+        <div class="modal-content">
+          <button class="modal-close" aria-label="Close image viewer">&times;</button>
+          <img id="modal-image" class="modal-img" src="" alt="" />
+          <div id="modal-caption" class="modal-caption"></div>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML("beforeend", modalHtml);
+
+    // Get modal elements
+    const modal = document.getElementById("image-modal");
+    const modalOverlay = modal.querySelector(".modal-overlay");
+    const closeBtn = modal.querySelector(".modal-close");
+    const modalImg = document.getElementById("modal-image");
+    const modalCaption = document.getElementById("modal-caption");
+
+    // Close modal function
+    function closeModal() {
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    // Open modal function
+    function openModal(imgElement) {
+      const src = imgElement.getAttribute("data-original") || imgElement.src;
+      const alt = imgElement.alt || "";
+      const caption = imgElement.closest("figure")?.querySelector("figcaption")?.textContent || alt;
+
+      modalImg.src = src;
+      modalImg.alt = alt;
+      modalCaption.textContent = caption;
+
+      modal.classList.add("active");
+      document.body.style.overflow = "hidden";
+      modal.focus();
+    }
+
+    // Event listeners for closing modal
+    modalOverlay.addEventListener("click", closeModal);
+    closeBtn.addEventListener("click", closeModal);
+
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+      if (!modal.classList.contains("active")) return;
+
+      if (e.key === "Escape") {
+        closeModal();
+      }
+    });
+
+    // Click handler for images
+    document.addEventListener("click", (e) => {
+      const img = e.target.closest(".zoomable");
+      if (img) {
+        e.preventDefault();
+        openModal(img);
+      }
+    });
+
+    // Keyboard activation for images
+    document.addEventListener("keydown", (e) => {
+      const img = e.target.closest?.(".zoomable");
+      if (img && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        openModal(img);
+      }
+    });
   }
 
   // --- Router ---
@@ -204,6 +315,7 @@
     location.hash = "/";
   });
   initSidebarToggle();
+  initImageModal();
   window.addEventListener("hashchange", onRouteChange);
   onRouteChange();
 })();
