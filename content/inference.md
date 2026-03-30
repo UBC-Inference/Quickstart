@@ -195,3 +195,66 @@ some more nomenclature surrounding number formats as well is helpful to note!
 
 
 ![](../assets/number-formats.png)
+
+FP32 is almost never used for inference but used for training. FP6 is a bit more experimental, but that means 16, 8, and 4 are the main formats.
+
+The formats have:
+- precision: the number of bits used to express a single value
+- type: are we representing an integer or floating point
+- scale factor: a multiplier used to map values from low-precision back to higher-precision
+
+These attributes determine two factors behind how well a number format represents values in inference
+- dynamic range: the difference between lowest and highest value that can be represented
+- granularity: the number of parameters or other values that can be quantized with the single scale
+
+Intuitively, floating point helps with dynamic range compared to integer formats, because of the sign, exponent factor, and the mantissa (summation of fractions multiplied by two to the exponent). The exponent gives a higher dynamic range
+
+quantization can be applied at the tensor level (the scale factor for QKV), channel level (where we calculate a different scale factor for each feature), and the block level, where the vector is divded into blocks of n values and having a scale factor
+
+granularity has a lower chance of smoothing outliers and thus preserve quality, but alos results in more overhead.
+
+Generally quantization can happen during or after training, but since we're not training the models... we'll discuss post-training.
+
+1. what parts of the model should we quantize 
+2. what number format offers the appropriate dynamic range and granularity?
+
+Typically the hierarchy of risk of model degradation after quantization is as follows (from least to most risky)
+1. weights (especially linear layers)
+2. activations (intermediate outputs are only somewhat sensitive, but they're also only a fraction of the weight)
+3. KV cache - quite sensitive
+4. attention - very sensitive!
+
+#### TurboQuant
+- .... will finish this section at some point after some more reading
+
+#### Speculative decoding
+Since decode is autoregressive, the bottleneck is memory bandwidth, with compute barely doing anything with low to moderate batch sizes. Speculative decoding attempts to use the spare compute to generate multipile tokens per forward pass through the target model, and may improve TPS/ITL
+
+in general the mechanism used is as follows:
+1. the speculator generartes one or more draft tokens
+2. the target model (which we are accelerating) validates these tokens to see if they match what the model would've generated
+3. the model accepts valid draft tokens and generates one token itself, completing the forward pass
+
+this is not free, but validation is a lot quicker than generation! (just like NP hahaha.. anyone?)
+
+the performance depends on a couple factors:
+1. draft token cost: the time for the draft token to be generated
+2. draft sequence length (# of toks per forward pass)
+3. tokekn acceptance rate (how accurate the draft tokens are to the target model)
+
+**Draft Target Speculative Decoding** Was the original method to do this, with the draft and target model. The draft models are usually just smaller members, with about a factor of 10 smaller than the parent.
+
+**Eagle** - will write after reading the paper... but in short
+Draft models like Qwen 0.5B are not good standalone LLMs on the hardware used by larger models (as they are designed to take advantage of cheap hardware! not data center GPUs)
+
+EAGLE is a purpose-built draft model trained from scratch to generate sequences of up to eight draft tokens, with a high acceptance rate. Because LLMs accumulate context during inference about predicted tokens in hidden layers, EAGLE can be trained to accept these hidden states and generate speculative tokens as output. It takes an early, middle, and late layer typically. 
+
+Additionally this implementation lends itself to being part of the pipeline, which reduces round trips to CPU to orchestrate the draft model
+
+#### N-gram Speculation and lookahead decoding
+N-gram speculation uses different mechanisms other than speculation, with no draft model. While generating the KV cache, the inference engine constrcuts an n-gram dictionary. N-gram dictionaries map the single starting token to an observed sequence of N tokens (i.e. the n-gram), which matches prefixes to likely suffixes. During decode, generated tokens are fed in, and any available suffix are used as draft tokens.
+
+N-gram can generate far longer sequences, but unfortunately it is only accepted at a high rate if the output and input content are similar. It is mainly used for code completion and revision, in domains with predictable results and inputs - helping it out perform EAGLE.
+
+
+
