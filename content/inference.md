@@ -136,31 +136,62 @@ What metrics do we care about?
 - CUDA Cores - which operates on individual numbres (or scalars)
 - tensor cores - which operate on vectors and matrices
 
+Gpus are also interconnected to communicate using either
+**NVLink** a one to one communication layer between gpus
+**NVSwitch** an all-to-all communication layer
+
+Each hardware company is competing to win on these workloads, so memory bandwidth, power efficiency and platform integration is what differentiates them.
 
 ## Software
 
 [TODO] Some things to write about SGLang, TensorRT and vLLM... will be filled out upon more research.
 
-## KV Cache
+CUDA is how code is run on NVIDIA GPUs, although CUDA is actually several components
+- kernels: user defined function that executes parallelized code on the GPU (not much unlike the OS kernel)
+- CUDA graph: a dag or kernels and other gpu operations for optimizing repeated workflows
+- CUDA drivers: an low level interface between the application and the GPU hardware to manage memory and execution
+- CUDA runtime: dev facing api for launching kernels and managing memory
 
-<!-- TODO: Add KV cache notes -->
+> [!NOTE] Kernels - at a very high level
+> At least as this project currently stands, we won't be writing our own kernels, but it is helpful to know kernels are specific to the hardware topology. Most of the time selection is automatic, but a few kernels may be selected to speed up inference.
+>
+> Kernel fusion can help reduce memory accesses (but as we said previously, not all kernels are composable if they are non-linearizable)
 
-## Decoding
 
-<!-- TODO: Add decoding notes -->
+### Frameworks and libraries
+TensorFlow is an e2e ML platform
+JAX is a research project with a simpler interface
+PyTorch is a python package for describing tensor operations, which is currently the standard for training and inference.
 
-## Memory Mechanics
+### Model File formats
+- safetensors is the standard, set by hugging face, where safetensors only hold tensor data and not executable code. 
+- some additional features include that they format memory using a mapping to ensure that the files are loadable without allocating full memory
 
-<!-- TODO: Add memory mechanics notes -->
+ONNX (open neural network exchange) stores the weights along with an execution graph, and as such ONNX bundles things together.
 
----
 
-## Serverless Mechanics
+### Inference engines
 
-<!-- TODO: Add serverless mechanics notes -->
+![](../assets/inference-engines.png)
 
----
+vLLM has broad support for hardware and different architectures. However, because it is so broadly constrained, there are performance gains to be wanted. Generally the performance losses don't matter when using a smaller GPU or older architectures where TensorRT-LLM does not offer benefits
 
-## List of Guiding Questions
+SGLang is quite dominant because of chinese open models and also because its xAI's engine of choice. SGLang is great for large MoE models, and if you want to contribute back (not quite ready for that yet!)
 
-<!-- TODO: Add guiding questions -->
+TensorRT-LLM is NVIDIA's open source inference engine, and offers the highest performance because its abstractions can be used at the lowest level.
+
+
+### NVIDIA Dynamo
+is a distributed system fro model serving, which works with every engine. Dynamo is the orchestration layer which enables KV cache re-use (based on prefix match), disaggregation, and multi-node parallelism.
+
+## Techniques
+
+### Quantization
+Quantization improves latency (in TTFT and TPS), throughput, and headroom for other optimizations. Since models are trained with weights this is usually represented in a certian native number format. (BF16 or FP16).
+
+Post training, this works to change model weights by moving to a lower-precision format. Prefill will run on lower-precision tensor cores (inversely correlating with number of FLOPS). Decode now loads a factor less data per value, which inversely affects the bandwidth.
+
+some more nomenclature surrounding number formats as well is helpful to note!
+
+
+![](../assets/number-formats.png)
