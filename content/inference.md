@@ -256,5 +256,38 @@ N-gram speculation uses different mechanisms other than speculation, with no dra
 
 N-gram can generate far longer sequences, but unfortunately it is only accepted at a high rate if the output and input content are similar. It is mainly used for code completion and revision, in domains with predictable results and inputs - helping it out perform EAGLE.
 
+### Caching
+Let's see if caching continues to be my favourite topic!
+- in prefill our inference engine builds a KV cache on an input sequence and updates the cache for each token during a decode.
+- the additional utility on top of improved autoregression is re-using it between requests
 
+When two sequences share a prefix, the KV cache can be reused from the first request to improve TTFT by skipping the prefill stage. Prefix caching can skip prefill on a great deal of tokens in specific use cases
+- complex system prompts: agents, tool calls often feature long prompts (which are the same for every call)
+- code completion: repetitive/constrained tasks that require the same lines of code shared as context
+- documents and retrieval: summarization, Q/A on the same document
+- multi-turn conversations: conversations are repetivive, so serving a language model at large scale benefits from prefix caching
 
+In actual prompting, it is desirable to have novel tokens as late in context as possible, but there is research that is in this domain which is attempting to support non-prefix sequences
+
+#### Storing the KV 
+KV caches take up a lot of memory, and oen could configure how much memory is allocated to the cache, but this means you'll need some eviction strategy which means you are no longer consistently increasing your cache hit chance. Therefore we have 4 typical places to store these caches close to an accelerator.
+
+![](../assets/memory-hiearchy.png)
+
+#### Cache-Aware Routing
+At scale we also know that since there are multiple replicas, incoming traffic is split. In traditional software engineering we do it based on load, but we may instead choose to have requests from the same user routed to the same replica as often as possible - especially for codegen, agents, or complex repetitive tasks.
+
+Global caches are also possible, but introduce other tradeoffs \<insert more notes here...>
+
+#### Long Context Handling
+Sequences are "long context" when they become long enough to cause problems with the KV cache during inference - and typically emerge past common cutoffs like 32k, 64k etc tokens (if our kv cache needs to evict, our inference more closely resembles something parabolic - regardless of eviction strategy)
+
+Methods like flash attention, paged attention, and chunked prefill help with this. Read more about this on your own if you're interested!
+
+## Model Parallelism
+
+TODO
+
+## Disaggregation
+
+TODO
