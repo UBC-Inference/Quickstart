@@ -286,8 +286,35 @@ Methods like flash attention, paged attention, and chunked prefill help with thi
 
 ## Model Parallelism
 
-TODO
+There are three forms of model parallelism:
+
+**Pipeline Parallelism**
+
+**Tensor Parallelism**
+
+**Expert Parallelism**
+
+
 
 ## Disaggregation
 
-TODO
+Disaggregation combines three ideas!
+
+1. prefill is compute-bound and the determines TTFT, while decode is a memory bound process that determines your TPS.
+2. specialization improves performance in everything from selection to parameter tuning
+3. Models can be parallelized via multiple gpus or even nodes (if bottlenecks from low-bandwidth interconnects can be avoided)
+
+It works by having the prefill engine take the input sequence and generate a KV cache while computing the first token.
+
+Then the prefill engine moves the KV cache over the interconnect to the decode engine
+
+The decode engine computes all subsequent requests. Conditional disaggregation usually checks whether the inpnut sequence is already cached or if it needs to be routed to a prefill engine. This approach is better for real world traffic. It requires lower TP than memory-bound decode.
+
+#### Use cases
+1. huge traffic - so not really us.
+2. serving a large model - usually > 100b
+3. traffic is prefill heavy
+
+if one or two are not true, the performance gains are not really worth it. (hence why our original idea of a disaggregated engine over edge networks is not worth it as the largest feasible model would've been 35b)
+
+
