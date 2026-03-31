@@ -289,10 +289,38 @@ Methods like flash attention, paged attention, and chunked prefill help with thi
 There are three forms of model parallelism:
 
 **Pipeline Parallelism**
+- splitting the layers of the model across the gpus
 
 **Tensor Parallelism**
+- splitting the tensors within each layer across gpus
 
 **Expert Parallelism**
+- shards entire experts (in MoE models) acros smultiple gpus
+
+| type | mechanism | drawback |
+| -- | --| --|
+| PP| each gpu handles a stage of the forward and backward pass | not recommended because of poor latency and utilization from the step-by-step pipeline |
+| TP | Compute heavy operations like matmuls are split across GPUS | requires finegrained synchronization, and is not suitable for multi-node |
+| EP | Each expert lives in one GPU, making in expert inference fast | Requires complicated routing to reach multiple experts to achieve improved throughput |
+
+
+Tensor Parallelism is the best for low latency model inference within a single node, and expert improves throughput for MoE LLMs. Pipeline is only used for multinode inference.
+
+### Tensor Parallelism for Lower Latency
+- this is the default strategy for multi-GPU infernce. Each layer of the model is splitand is distributed across allocated GPUs. The expense of reading weights and executing matmul is shared. These layers need communication in reducing fashion to a single output, so high-bandwidth intra-node links are necessary to reduce overhead.
+- typically this is better for TPS on a per user basis, and with large enough models
+
+
+### Expert Parallelism
+experts in a model are split up across gpus. It improves total system throughput and makes inference more scalable (since individual experts process tokens separately)
+- there's less inter GPU communication than in TP, and the router is replicated onto each gpu.
+
+### Multi-node inference
+- huge models with high precision, or million token input sequences might need a lot more gpus. 
+- this introduces new challenges:
+
+    - Infrastructure: how do you provision two ore more interconnected gpu nodes and build across cloud providers
+    - parallelism: how do you communicate over infiniband (which is magnitudes slower than NVLink?)
 
 
 
