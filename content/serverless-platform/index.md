@@ -2,6 +2,5 @@
 title: Serverless Platform
 ---
 
-This project is a serverless inference platform.
-
+# Problem Statement
 <!-- TODO: Add project description, quickstart, and reading list -->
