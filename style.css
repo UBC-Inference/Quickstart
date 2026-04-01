@@ -110,8 +110,8 @@ body {
   border-radius: 6px;
   color: var(--text-secondary);
   cursor: pointer;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   transition: all 0.15s;
 }
 
@@ -267,6 +267,62 @@ a:focus-visible {
   letter-spacing: -0.025em;
   margin-bottom: 1rem;
   line-height: 1.2;
+}
+
+/* --- Author info --- */
+.metadata {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.author-label {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.author-avatar {
+  width: 40;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: grayscale(100%);
+  transition: filter 0.2s ease;
+}
+
+.author-avatar img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  object-fit: cover;
+  display: block;
+}
+
+.author-name a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+
+.author-name a:hover {
+  border-bottom-color: var(--text-secondary);
 }
 
 .prose h2 {
@@ -652,6 +708,15 @@ a:focus-visible {
 
   .prose h1 {
     font-size: 1.75rem;
+  }
+
+  .author-info {
+    font-size: 0.875rem;
+  }
+
+  .author-avatar {
+    width: 64px;
+    height: 64px;
   }
 
   .prose h2 {

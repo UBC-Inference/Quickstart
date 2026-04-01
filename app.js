@@ -21,10 +21,28 @@
     const match = md.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
     if (!match) return { attrs: {}, content: md };
     const attrs = {};
-    match[1].split("\n").forEach((line) => {
-      const idx = line.indexOf(":");
-      if (idx > 0) {
-        attrs[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
+    const lines = match[1].split("\n");
+    let currentKey = null;
+    lines.forEach((line) => {
+      if (line.startsWith("  ") && currentKey) {
+        const idx = line.trim().indexOf(":");
+        if (idx > 0) {
+          const val = line.trim().slice(idx + 1).trim();
+          if (val) attrs[currentKey][line.trim().slice(0, idx).trim()] = val;
+        }
+      } else {
+        currentKey = null;
+        const idx = line.indexOf(":");
+        if (idx > 0) {
+          const key = line.slice(0, idx).trim();
+          const val = line.slice(idx + 1).trim();
+          if (val) {
+            attrs[key] = val;
+          } else {
+            attrs[key] = {};
+            currentKey = key;
+          }
+        }
       }
     });
     return { attrs, content: match[2] };
@@ -191,7 +209,19 @@
       const html = marked.parse(content);
       const title = attrs.title || page.title;
       document.title = title + " - Quickstart";
-      document.getElementById("article").innerHTML = `<h1>${title}</h1>` + html;
+
+      let metadataInner = "";
+      if (attrs.author && typeof attrs.author === "object" && attrs.author.name) {
+        const name = attrs.author.name;
+        const url = attrs.author.url || "";
+        const image = attrs.author.image || "";
+        const imageTag = image ? `<div class="author-avatar"><img src="${image}" alt="${name}" /></div>` : "";
+        const nameTag = url ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${name}</a>` : name;
+        metadataInner += `<div class="author-info"><span class="author-label">Author</span><span class="author-name">${nameTag}</span>${imageTag}</div>`;
+      }
+      const metadataHtml = Object.keys(attrs).length > 0 ? `<div class="metadata">${metadataInner}</div>` : "";
+
+      document.getElementById("article").innerHTML = `<h1>${title}</h1>${metadataHtml}${html}`;
 
       renderTOC();
     } catch (err) {
