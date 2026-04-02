@@ -24,7 +24,7 @@ SIP focuses on LLM inference but is designed to generalize to other GPU-accelera
 
 2. Ergonomics/developer experience is (perhaps surprisingly) the second goal of this project. Working around containerization and setting up your own infrastructure is a process with a lot of friction. Ideally SIP could streamline the process for hosting a serverless inference platform, but also ergonomics and developer experience is important for making a project like this practical. The actual main point of differentiation that SIP is intended to bring is a reasonable cold-start performance and a better way to manage resource sharing between multiple tenants.
 
-3. Performance is the last goal, but also ties into everything that has already been stated. Generally ergonomics are prioritized to performance wheer appropriate (i.e. the losses are marginal). Regarding implementation, functionality like serving orchestration, image swapping, and checkpointing must be implemented correctly to satisfy acceptable bounds for model switching and coldstarts. If performance gains are possible for a reasonably proportional amount of effort, scope may also be added .
+3. Performance is the last goal, but also ties into everything that has already been stated. Generally ergonomics are prioritized to performance wheer appropriate (i.e. the losses are marginal). Regarding implementation, functionality like serving orchestration, image swapping, and checkpointing must be implemented correctly to satisfy acceptable bounds for model switching and coldstarts. If performance gains are possible for a reasonably proportional amount of effort, scope may also be added.
 
 ## Requirements
 
