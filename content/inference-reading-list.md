@@ -2,7 +2,7 @@
 title: Reading List
 ---
 
-## Inference Intuition (AKA things that are not entirely software engineering)
+## Inference Intuition 
 
 - [ ] [Illustrated Transformers](alammar.github.io/illustrated-transformer)
 - [ ] [Efficient Memory Management for Large Language Model Serving with PagedAttention](https://arxiv.org/pdf/2309.06180)
@@ -13,4 +13,4 @@ title: Reading List
 ## Misc
 
 - [ ] [Modal GPU Glossary](https://modal.com/gpu-glossary)
- [ ] [vLLM discussion on GPU cold starts](github.com/vllm-project/vllm/issues/34303)
+- [ ] [vLLM discussion on GPU cold starts](https://github.com/vllm-project/vllm/issues/34303)

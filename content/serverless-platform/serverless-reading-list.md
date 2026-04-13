@@ -6,8 +6,7 @@
 - [ ] [kubernetes docs](https://kubernetes.io/docs/home/)
 - [ ] [ gVisor - used by Modal! ]( https://gvisor.dev/ )
 
-- [ ] [Modal's memory snapshotting](modal.com/blog/gpu-mem-snapshots)
+- [ ] [Modal's memory snapshotting](https://modal.com/blog/gpu-mem-snapshots)
 - [ ] [CUDA checkpointing APIs](https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CHECKPOINT.html)
--
 
 
