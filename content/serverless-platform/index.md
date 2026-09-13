@@ -1,6 +1,6 @@
 ---
 title: Serverless Inference Platform
-published: true
+published: false
 nav_section: [Project] Serverless Platform
 nav_order: 5
 author:

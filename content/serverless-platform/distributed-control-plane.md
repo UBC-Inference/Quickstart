@@ -1,6 +1,6 @@
 ---
 title: Distributed Control Plane (Stub)
-published: true
+published: false
 nav_section: [Project] Serverless Platform
 nav_order: 6
 author:

@@ -55,21 +55,20 @@
     const pages = await Promise.all(
       Object.entries(PAGES).map(async ([href, page]) => {
         const res = await fetch(BASE_PATH + "/" + page.file);
-        if (!res.ok) return null;
         const { attrs } = parseFrontmatter(await res.text());
-        if (attrs.published !== "true" || !attrs.nav_section) return null;
         return {
           href,
           title: attrs.title || page.title,
           section: attrs.nav_section,
           order: Number(attrs.nav_order) || 0,
+          published: attrs.published === "true",
         };
       }),
     );
 
     const sections = new Map();
     pages
-      .filter(Boolean)
+      .filter((page) => page.published)
       .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
       .forEach((page) => {
         if (!sections.has(page.section)) sections.set(page.section, []);
