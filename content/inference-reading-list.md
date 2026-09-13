@@ -1,5 +1,12 @@
 ---
 title: Reading List
+published: true
+nav_section: Inference
+nav_order: 3
+author:
+    name: Kevin Xiao
+    url: https://kxiao.dev
+    image: assets/kevin-xiao.png
 ---
 
 ## Inference Intuition 

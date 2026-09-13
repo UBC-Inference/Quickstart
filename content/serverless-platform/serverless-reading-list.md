@@ -1,3 +1,14 @@
+---
+title: Reading List
+published: true
+nav_section: [Project] Serverless Platform
+nav_order: 8
+author:
+    name: Kevin Xiao
+    url: https://kxiao.dev
+    image: assets/kevin-xiao.png
+---
+
 - [ ] [Modal - Cold starts with GPUs](https://modal.com/blog/gpu-mem-snapshots)
 - [ ] [Talk on GPU coldstarts - NVIDIA GTC](https://www.nvidia.com/en-us/on-demand/session/gtc26-s81424/)
 - [ ] [criu.org](https://criu.org) (OS checkpointing) # this site is also very slow to load sometimes
@@ -8,5 +19,3 @@
 
 - [ ] [Modal's memory snapshotting](https://modal.com/blog/gpu-mem-snapshots)
 - [ ] [CUDA checkpointing APIs](https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CHECKPOINT.html)
-
-

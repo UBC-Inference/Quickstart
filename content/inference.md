@@ -1,5 +1,12 @@
 ---
 title: Inference Overview
+published: true
+nav_section: Inference
+nav_order: 2
+author:
+    name: Kevin Xiao
+    url: https://kxiao.dev
+    image: assets/kevin-xiao.png
 ---
 
 ## Overview
@@ -344,5 +351,3 @@ The decode engine computes all subsequent requests. Conditional disaggregation u
 3. traffic is prefill heavy
 
 if one or two are not true, the performance gains are not really worth it. (hence why our original idea of a disaggregated engine over edge networks is not worth it as the largest feasible model would've been 35b)
-
-

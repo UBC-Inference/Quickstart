@@ -1,5 +1,12 @@
 ---
 title: Reading List
+published: true
+nav_section: ML without prerequisites
+nav_order: 4
+author:
+    name: Kevin Xiao
+    url: https://kxiao.dev
+    image: assets/kevin-xiao.png
 ---
 
 ## Math Prerequisites

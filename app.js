@@ -49,6 +49,36 @@
   }
 
   // --- Sidebar ---
+  let NAV = [];
+
+  async function loadNavigation() {
+    const pages = await Promise.all(
+      Object.entries(PAGES).map(async ([href, page]) => {
+        const res = await fetch(BASE_PATH + "/" + page.file);
+        if (!res.ok) return null;
+        const { attrs } = parseFrontmatter(await res.text());
+        if (attrs.published !== "true" || !attrs.nav_section) return null;
+        return {
+          href,
+          title: attrs.title || page.title,
+          section: attrs.nav_section,
+          order: Number(attrs.nav_order) || 0,
+        };
+      }),
+    );
+
+    const sections = new Map();
+    pages
+      .filter(Boolean)
+      .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
+      .forEach((page) => {
+        if (!sections.has(page.section)) sections.set(page.section, []);
+        sections.get(page.section).push({ title: page.title, href: page.href });
+      });
+
+    NAV = [...sections].map(([title, links]) => ({ title, links }));
+  }
+
   function renderSidebar(activePath) {
     const navList = document.getElementById("nav-list");
     navList.innerHTML = "";
@@ -142,10 +172,11 @@
       return;
     }
 
-    renderSidebar(path);
-    renderPageNav(path);
-
     try {
+      await loadNavigation();
+      renderSidebar(path);
+      renderPageNav(path);
+
       const res = await fetch(BASE_PATH + "/" + page.file);
       if (!res.ok) throw new Error("Failed to load " + page.file);
       const md = await res.text();
