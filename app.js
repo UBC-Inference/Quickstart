@@ -50,6 +50,20 @@
 
   // --- Sidebar ---
   let NAV = [];
+  let previewMode = false;
+
+  async function initPreviewMode() {
+    if (new URLSearchParams(location.search).get("preview") === "1") {
+      previewMode = true;
+      return;
+    }
+
+    try {
+      previewMode = (await fetch(BASE_PATH + "/.quickstart-preview", { cache: "no-store" })).ok;
+    } catch {
+      previewMode = false;
+    }
+  }
 
   async function loadNavigation() {
     const pages = await Promise.all(
@@ -68,7 +82,7 @@
 
     const sections = new Map();
     pages
-      .filter((page) => page.published)
+      .filter((page) => previewMode || page.published)
       .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
       .forEach((page) => {
         if (!sections.has(page.section)) sections.set(page.section, []);
@@ -377,5 +391,5 @@
   initSidebarToggle();
   initImageModal();
   window.addEventListener("hashchange", onRouteChange);
-  onRouteChange();
+  initPreviewMode().then(onRouteChange);
 })();
