@@ -7,4 +7,5 @@ const PAGES = {
     "/serverless-platform/artifact-distribution": { file: "content/serverless-platform/artifact-distribution.md", title: "System-Level Primitives" },
     "/serverless-platform/serverless-reading-list": { file: "content/serverless-platform/serverless-reading-list.md", title: "Reading List" },
     "/ml-from-scratch-reading-list": { file: "content/ml-from-scratch-reading-list.md", title: "Reading List" },
+    "/bidirectional-inference": { file: "content/bidirectional-inference/index.md", title: "Bidirectional Inference" },
 };

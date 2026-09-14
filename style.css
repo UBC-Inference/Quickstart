@@ -301,8 +301,6 @@ a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: grayscale(100%);
-  transition: filter 0.2s ease;
 }
 
 .author-avatar img {
