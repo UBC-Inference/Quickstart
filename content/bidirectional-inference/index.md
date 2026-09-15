@@ -42,6 +42,8 @@ Having ASR and LLM servers does increase latency even if pipelining subsidizes s
 
 ![Bidirectional inference architecture](../../assets/bidirectional-inference-architecture.webp)
 
+![Bidirectional inference call diagram](../../assets/bidirectional-inference-call-diagram.png)
+
 ### Layers
 
 #### API 
