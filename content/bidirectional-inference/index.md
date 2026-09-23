@@ -13,6 +13,8 @@ author:
 
 Working with audio helps speed up one component of agentic workflows - the unfortunate limitation of human appendages (our fingers! and our brain...) - for translating thought into useful input. Exposing that as an interface takes some careful thought and consideration but the goal of this project is to set up the baseline platform that enables this multi-modal inference.
 
+This is also a fairly trivial project. The personal goal is to familiarize with the tools available in the ecosystem before searching for more interesting problems.
+
 ## Goals
 
 #### Latency

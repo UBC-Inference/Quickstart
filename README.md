@@ -4,5 +4,3 @@ Reading these documents is not intended to give a comprehensive understanding, b
 
 The repository is organized with a glossary of notes and terms in the root specific to inference, and some initial recommended reading.
 Proposed or ongoing projects contain their own quick start and additional reading if you're interested.
-
-This repository will also be private until at least the launch of the first project!
