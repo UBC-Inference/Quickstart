@@ -1,12 +1,11 @@
 ---
 title: Distributed Control Plane (Stub)
 published: false
-nav_section: [Project] Serverless Platform
+nav_section: Projects
 nav_order: 6
 author:
     name: Kevin Xiao
     url: https://kxiao.dev
-    image: assets/kevin-xiao.png
 ---
 
 This page is a stub for the distributed system that provides the “serverless” abstraction: intelligent routing, scale up/down, and preemption-aware placement.

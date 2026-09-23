@@ -6,7 +6,6 @@ nav_order: 1
 author:
     name: Kevin Xiao
     url: https://kxiao.dev
-    image: assets/kevin-xiao.png
 ---
 
 This is a repository with some quick notes about inference and domains related to this organization's work. UBC Inference currently consists of [Kevin Xiao](https://kxiao.dev), [Brian Adhitya](https://briannval.com), and [Kezia Rijadi](https://keziarijadi.vercel.app/)

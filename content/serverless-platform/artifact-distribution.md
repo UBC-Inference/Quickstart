@@ -1,12 +1,11 @@
 ---
 title: System-Level Primitives (Stub)
 published: false
-nav_section: [Project] Serverless Platform
+nav_section: Projects
 nav_order: 7
 author:
     name: Kevin Xiao
     url: https://kxiao.dev
-    image: assets/kevin-xiao.png
 ---
 
 This page is a stub for the system-level pieces: static artifact distribution and process-level snapshot/restore for fast cold starts.

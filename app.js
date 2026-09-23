@@ -68,7 +68,7 @@
   async function loadNavigation() {
     const pages = await Promise.all(
       Object.entries(PAGES).map(async ([href, page]) => {
-        const res = await fetch(BASE_PATH + "/" + page.file);
+        const res = await fetch(BASE_PATH + "/" + page.file, { cache: "no-store" });
         const { attrs } = parseFrontmatter(await res.text());
         return {
           href,
@@ -181,7 +181,7 @@
     const page = PAGES[path];
     if (!page) {
       document.getElementById("article").innerHTML = `<h1>Not Found</h1><p>Page not found.</p>`;
-      document.title = "Not Found - Quickstart";
+      document.title = "Not Found - Inference @ UBC";
       return;
     }
 
@@ -190,7 +190,7 @@
       renderSidebar(path);
       renderPageNav(path);
 
-      const res = await fetch(BASE_PATH + "/" + page.file);
+      const res = await fetch(BASE_PATH + "/" + page.file, { cache: "no-store" });
       if (!res.ok) throw new Error("Failed to load " + page.file);
       const md = await res.text();
       const { attrs, content } = parseFrontmatter(md);
@@ -252,16 +252,14 @@
 
       const html = marked.parse(content);
       const title = attrs.title || page.title;
-      document.title = title + " - Quickstart";
+      document.title = title + " - Inference @ UBC";
 
       let metadataInner = "";
       if (attrs.author && typeof attrs.author === "object" && attrs.author.name) {
         const name = attrs.author.name;
         const url = attrs.author.url || "";
-        const image = attrs.author.image || "";
-        const imageTag = image ? `<div class="author-avatar"><img src="${image}" alt="${name}" /></div>` : "";
         const nameTag = url ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${name}</a>` : name;
-        metadataInner += `<div class="author-info"><span class="author-label">Author</span><span class="author-name">${nameTag}</span>${imageTag}</div>`;
+        metadataInner += `<div class="author-info"><span class="author-label">Author</span><span class="author-name">${nameTag}</span></div>`;
       }
       const metadataHtml = Object.keys(attrs).length > 0 ? `<div class="metadata">${metadataInner}</div>` : "";
 

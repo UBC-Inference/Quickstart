@@ -6,7 +6,6 @@ nav_order: 2
 author:
     name: Kevin Xiao
     url: https://kxiao.dev
-    image: assets/kevin-xiao.png
 ---
 
 ## Overview

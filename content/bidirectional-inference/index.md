@@ -1,19 +1,18 @@
 ---
 title: Bidirectional Inference
-published: false
-nav_section: [Project] Multimodal Inference
+published: true
+nav_section: Projects
 nav_order: 5
 author:
     name: Kevin Xiao
     url: https://kxiao.dev
-    image: assets/kevin-xiao.png
 ---
 
 ## Problem Statement
 
 Working with audio helps speed up one component of agentic workflows - the unfortunate limitation of human appendages (our fingers! and our brain...) - for translating thought into useful input. Exposing that as an interface takes some careful thought and consideration but the goal of this project is to set up the baseline platform that enables this multi-modal inference.
 
-This is also a fairly trivial project. The personal goal is to familiarize with the tools available in the ecosystem before searching for more interesting problems.
+This is also a fairly introductory project. The personal goal is to familiarize with the tools available in the ecosystem before searching for more interesting problems.
 
 ## Goals
 

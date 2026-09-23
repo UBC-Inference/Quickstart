@@ -1,12 +1,11 @@
 ---
 title: Serverless Inference Platform
 published: false
-nav_section: [Project] Serverless Platform
+nav_section: Projects
 nav_order: 5
 author:
     name: Kevin Xiao
     url: https://kxiao.dev
-    image: assets/kevin-xiao.png
 ---
 
 ## Problem Statement
