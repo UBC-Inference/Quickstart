@@ -28,7 +28,7 @@ Adoptability is a really important personal goal as for the ambitious wants of a
 #### Performance...
 Performance means many things. Reading the reading list will probably help, but we care about both throughput (tok/s) and also TTFT (s). Using duplex interaction is only useful if the outputted text also is used in a similar manner so this may mean pipelining, or some sort of speculative inference on the partial ASR output to reduce latency. These metrics are already touched upon in latency, but we also care about actual scalability when talking in terms of performance.
 
-I don't have a huge personal wallet, and its important that we're able to scale this architecture to work for multiple users. Batch requests, HPA scaling etc. are probably considerations here. This is not the primary goal but is still important, so you might notice less emphasis on this in this (initial) design.
+Cost does matter, and its important that we're able to scale this architecture to work for multiple users. Batch requests, HPA scaling etc. are probably considerations here. This is not the primary goal but is still important, so you might notice less emphasis on this in this (initial) design.
 
 ## Tradeoffs
 
@@ -54,7 +54,7 @@ Authorization will use some simple bearer token, which will eventually be conduc
 #### Orchestration
 The Go server will also be responsible for session state management and orchestration. This will mostly be handled in memory (for any hot operations e.g. active session maps and transcripts updates/append operations from inference ASR).
 
-Orchestration also means that go will encapsulate the required pipelining of inference from ASR to LLM, taking client PCM/ogg (whatever audio encoding we go with) -> ASR -> Go orchestration server -> LLM -> G orchestration server -> back to client as structured transcript/tool response.
+Orchestration also means that go will encapsulate the required pipelining of inference from ASR to LLM, taking client PCM/ogg (whatever audio encoding we go with) -> ASR -> Go orchestration server -> LLM -> Go orchestration server -> back to client as structured transcript/tool response.
 
 #### Inference Engine
 ASR will be served using sherpa-onnx's Go API and we'll serve some small non-reasoning model (see below) using vLLM because of its built in prefix caching, which will be desirable given the shared prefixes that these transcripts have. We'll likely serve vLLM via its Python API. In the long run we may eventually move to TensorRT-LLM but at the moment it's not a priority 
@@ -83,3 +83,11 @@ https://hci.stanford.edu/research/speech/. It is a bit of an exaggeration that i
 
 https://developers.openai.com/api/docs/guides/websocket-mode
 https://developers.openai.com/api/docs/guides/realtime
+
+## References
+
+[1] Stanford HCI Group, "Speech input research," Stanford University. [Online]. Available: https://hci.stanford.edu/research/speech/. [Accessed: Sep. 22, 2026].
+
+[2] OpenAI, "WebSocket mode," OpenAI API Documentation. [Online]. Available: https://developers.openai.com/api/docs/guides/websocket-mode. [Accessed: Sep. 22, 2026].
+
+[3] OpenAI, "Realtime API," OpenAI API Documentation. [Online]. Available: https://developers.openai.com/api/docs/guides/realtime. [Accessed: Sep. 22, 2026].
