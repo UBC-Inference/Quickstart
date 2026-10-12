@@ -45,6 +45,12 @@ Having ASR and LLM servers does increase latency even if pipelining subsidizes s
 
 ![Bidirectional inference call diagram](../../assets/bidirectional-inference-call-diagram.png)
 
+### ASR
+
+#### Low-Level Design
+
+![ASR low-level design diagram](../../assets/bidirectional-inference-asr-lld.webp)
+
 ### Layers
 
 #### API 
@@ -70,8 +76,9 @@ Because we're targetting AWS as our deployment platform - we'll use docker, and 
 2. sherpa-onnx ASR container
 3. Qwen 2.5b-7b vLLM container
 
-## Artifacts (TODO)
-(Link to github eventually)
+## Artifacts
+
+The [bidirectional toy inference implementation](https://github.com/UBC-Inference/bidirectonal-toy-inference) is currently under development and remains unfinished.
 
 ## References/Footnotes
 Not APA, but I'm lazy ;D
